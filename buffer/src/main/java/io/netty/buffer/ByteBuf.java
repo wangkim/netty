@@ -110,7 +110,7 @@ import java.nio.charset.UnsupportedCharsetException;
  * {@link #capacity() capacity} of the buffer.
  *
  * <pre>
- * // Fills the writable bytes of a buffer with random integers.
+ * // Fills the WRITABLE bytes of a buffer with random integers.
  * {@link ByteBuf} buffer = ...;
  * while (buffer.maxWritableBytes() >= 4) {
  *     buffer.writeInt(random.nextInt());

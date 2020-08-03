@@ -461,13 +461,14 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                         new IllegalStateException("incompatible event loop type: " + eventLoop.getClass().getName()));
                 return;
             }
-
+            // 将boss线程与 channel 绑定
             AbstractChannel.this.eventLoop = eventLoop;
 
             if (eventLoop.inEventLoop()) {
                 register0(promise);
             } else {
                 try {
+                    // 启动自身的eventloop进行select
                     eventLoop.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -493,7 +494,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                     return;
                 }
                 boolean firstRegistration = neverRegistered;
-                doRegister();
+                doRegister(); //注册0标识位针对selector
                 neverRegistered = false;
                 registered = true;
 
@@ -504,7 +505,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 safeSetSuccess(promise);
                 pipeline.fireChannelRegistered();
                 // Only fire a channelActive if the channel has never been registered. This prevents firing
-                // multiple channel actives if the channel is deregistered and re-registered.
+                // multiple channel actives if the channel is deregistered and re-regNioEventLoopistered.
                 if (isActive()) {
                     if (firstRegistration) {
                         pipeline.fireChannelActive();
